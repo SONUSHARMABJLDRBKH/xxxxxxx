@@ -1,0 +1,400 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Private user account profile and preferences",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "phoneNumber": { "type": "string" },
+        "phoneVerified": { "type": "boolean" },
+        "language": { "type": "string", "enum": ["en", "hi"] },
+        "darkMode": { "type": "boolean" },
+        "notificationsEnabled": { "type": "boolean" },
+        "role": { "type": "string", "enum": ["user", "admin"] },
+        "blocked": { "type": "boolean" },
+        "blockReason": { "type": "string" },
+        "welcomeBonusClaimed": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "displayName", "language", "role", "blocked", "welcomeBonusClaimed", "createdAt", "updatedAt"]
+    },
+    "Wallet": {
+      "title": "Wallet",
+      "description": "User coin wallet and timer/milestone counters",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "availableCoins": { "type": "integer" },
+        "totalEarnedCoins": { "type": "integer" },
+        "welcomeBonusCoins": { "type": "integer" },
+        "dailyBonusCoins": { "type": "integer" },
+        "scratchCoins": { "type": "integer" },
+        "spinCoins": { "type": "integer" },
+        "quizCoins": { "type": "integer" },
+        "adCoins": { "type": "integer" },
+        "redeemedCoins": { "type": "integer" },
+        "adRewardsCount": { "type": "integer" },
+        "specialSpinsUnlocked": { "type": "integer" },
+        "specialSpinsUsed": { "type": "integer" },
+        "lastDailyBonusAt": { "type": "integer" },
+        "dailyScratchDate": { "type": "string" },
+        "dailyScratchUsed": { "type": "integer" },
+        "extraScratchAvailable": { "type": "integer" },
+        "lastFreeSpinAt": { "type": "integer" },
+        "adFreePassExpiresAt": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "availableCoins", "totalEarnedCoins", "createdAt", "updatedAt"]
+    },
+    "WalletTransaction": {
+      "title": "WalletTransaction",
+      "description": "Immutable ledger entry for coin credits and deductions",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "txType": { "type": "string" },
+        "amount": { "type": "integer" },
+        "status": { "type": "string", "enum": ["COMPLETED", "PENDING", "REJECTED"] },
+        "description": { "type": "string" },
+        "referenceId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "txType", "amount", "status", "description", "createdAt"]
+    },
+    "DailyBonusRecord": {
+      "title": "DailyBonusRecord",
+      "description": "Daily bonus claim record",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "claimDate": { "type": "string" },
+        "coins": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "claimDate", "coins", "createdAt"]
+    },
+    "ScratchCardRecord": {
+      "title": "ScratchCardRecord",
+      "description": "Scratch card reward record",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "cardDate": { "type": "string" },
+        "coins": { "type": "integer" },
+        "extraAdCard": { "type": "boolean" },
+        "claimed": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "cardDate", "coins", "extraAdCard", "claimed", "createdAt"]
+    },
+    "SpinHistoryRecord": {
+      "title": "SpinHistoryRecord",
+      "description": "Lucky Spin wheel outcome record",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "coins": { "type": "integer" },
+        "spinType": { "type": "string", "enum": ["DAILY_FREE", "AD_EXTRA", "SPECIAL_999"] },
+        "adVerified": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "coins", "spinType", "adVerified", "createdAt"]
+    },
+    "QuizQuestion": {
+      "title": "QuizQuestion",
+      "description": "Bihar Board objective MCQ question",
+      "type": "object",
+      "properties": {
+        "questionClass": { "type": "integer" },
+        "subject": { "type": "string" },
+        "chapter": { "type": "string" },
+        "questionText": { "type": "string" },
+        "optionA": { "type": "string" },
+        "optionB": { "type": "string" },
+        "optionC": { "type": "string" },
+        "optionD": { "type": "string" },
+        "correctOption": { "type": "string", "enum": ["A", "B", "C", "D"] },
+        "explanation": { "type": "string" },
+        "source": { "type": "string" },
+        "examYear": { "type": "string" },
+        "createdBy": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["questionClass", "subject", "chapter", "questionText", "optionA", "optionB", "optionC", "optionD", "correctOption", "explanation", "source", "createdBy", "createdAt", "updatedAt"]
+    },
+    "QuizAttempt": {
+      "title": "QuizAttempt",
+      "description": "User attempt record for a quiz question",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "questionId": { "type": "string" },
+        "questionClass": { "type": "integer" },
+        "subject": { "type": "string" },
+        "selectedOption": { "type": "string" },
+        "correct": { "type": "boolean" },
+        "coinsAwarded": { "type": "integer" },
+        "pointsAwarded": { "type": "number" },
+        "adsWatchedForUnlock": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "questionId", "questionClass", "subject", "selectedOption", "correct", "coinsAwarded", "pointsAwarded", "createdAt"]
+    },
+    "QuizScoreSummary": {
+      "title": "QuizScoreSummary",
+      "description": "Subject-wise quiz scoreboard and accuracy summary",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "mathScore": { "type": "number" },
+        "physicsScore": { "type": "number" },
+        "chemistryScore": { "type": "number" },
+        "biologyScore": { "type": "number" },
+        "hindiScore": { "type": "number" },
+        "englishScore": { "type": "number" },
+        "totalAttempted": { "type": "integer" },
+        "correctCount": { "type": "integer" },
+        "incorrectCount": { "type": "integer" },
+        "overallScore": { "type": "number" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "totalAttempted", "correctCount", "incorrectCount", "overallScore", "updatedAt"]
+    },
+    "AdRewardLog": {
+      "title": "AdRewardLog",
+      "description": "Verified rewarded advertisement completion log",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "adFormat": { "type": "string" },
+        "placement": { "type": "string" },
+        "adUnitId": { "type": "string" },
+        "coinsAwarded": { "type": "integer" },
+        "verified": { "type": "boolean" },
+        "rewardToken": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "adFormat", "placement", "adUnitId", "coinsAwarded", "verified", "rewardToken", "createdAt"]
+    },
+    "AdFreePassRecord": {
+      "title": "AdFreePassRecord",
+      "description": "24-hour Quiz Ad-Free Pass purchase record",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "costCoins": { "type": "integer" },
+        "durationHours": { "type": "integer" },
+        "active": { "type": "boolean" },
+        "expiresAt": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "costCoins", "durationHours", "active", "expiresAt", "createdAt"]
+    },
+    "RewardCatalogItem": {
+      "title": "RewardCatalogItem",
+      "description": "Configurable physical/UPI reward catalog item",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "titleHi": { "type": "string" },
+        "category": { "type": "string" },
+        "coinCost": { "type": "integer" },
+        "inventoryCount": { "type": "integer" },
+        "deliveryTerms": { "type": "string" },
+        "imageKey": { "type": "string" },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "category", "coinCost", "inventoryCount", "deliveryTerms", "imageKey", "active", "createdAt", "updatedAt"]
+    },
+    "RewardSubmission": {
+      "title": "RewardSubmission",
+      "description": "Reward redemption or Monthly Reward participation submission",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "username": { "type": "string" },
+        "rewardId": { "type": "string" },
+        "rewardTitle": { "type": "string" },
+        "submissionType": { "type": "string", "enum": ["STORE_REDEMPTION", "MONTHLY_PARTICIPATION"] },
+        "coinCost": { "type": "integer" },
+        "upiOrAddress": { "type": "string" },
+        "instagramHandle": { "type": "string" },
+        "screenshotName": { "type": "string" },
+        "status": { "type": "string", "enum": ["PENDING", "APPROVED", "REJECTED", "FULFILLED"] },
+        "adminNote": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "username", "rewardId", "rewardTitle", "submissionType", "coinCost", "status", "createdAt", "updatedAt"]
+    },
+    "Announcement": {
+      "title": "Announcement",
+      "description": "Monthly reward event details and winner announcements",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "titleHi": { "type": "string" },
+        "message": { "type": "string" },
+        "messageHi": { "type": "string" },
+        "category": { "type": "string" },
+        "winnerNames": { "type": "string" },
+        "instagramUrl": { "type": "string" },
+        "closingDate": { "type": "string" },
+        "resultDate": { "type": "string" },
+        "availableSlots": { "type": "integer" },
+        "participantCount": { "type": "integer" },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "message", "category", "active", "createdAt", "updatedAt"]
+    },
+    "AppNotification": {
+      "title": "AppNotification",
+      "description": "In-app user and broadcast notifications",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "titleHi": { "type": "string" },
+        "body": { "type": "string" },
+        "bodyHi": { "type": "string" },
+        "category": { "type": "string" },
+        "readFlag": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "body", "category", "readFlag", "createdAt"]
+    },
+    "AdminUserRecord": {
+      "title": "AdminUserRecord",
+      "description": "Authorized admin role registry",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role", "createdAt"]
+    },
+    "LeaderboardEntry": {
+      "title": "LeaderboardEntry",
+      "description": "Public non-PII leaderboard rank record",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "username": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "totalQuizScore": { "type": "number" },
+        "totalCoinsEarned": { "type": "integer" },
+        "weeklyScore": { "type": "number" },
+        "monthlyScore": { "type": "number" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "username", "totalQuizScore", "totalCoinsEarned", "weeklyScore", "monthlyScore", "updatedAt"]
+    },
+    "AppSettings": {
+      "title": "AppSettings",
+      "description": "Admin-configurable AdMob and reward configuration",
+      "type": "object",
+      "properties": {
+        "adMobAppId": { "type": "string" },
+        "bannerAdUnitId": { "type": "string" },
+        "rewardedAdUnitId": { "type": "string" },
+        "interstitialAdUnitId": { "type": "string" },
+        "useTestAds": { "type": "boolean" },
+        "instagramUrl": { "type": "string" },
+        "dailyBonusMin": { "type": "integer" },
+        "dailyBonusMax": { "type": "integer" },
+        "scratchMin": { "type": "integer" },
+        "scratchMax": { "type": "integer" },
+        "spinWeightsCsv": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["adMobAppId", "bannerAdUnitId", "rewardedAdUnitId", "useTestAds", "instagramUrl", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "User profiles isolated per authenticated owner or admin"
+    },
+    "/wallets/{userId}": {
+      "schema": { "$ref": "#/entities/Wallet" },
+      "description": "User coin wallet and timer balances"
+    },
+    "/transactions/{txId}": {
+      "schema": { "$ref": "#/entities/WalletTransaction" },
+      "description": "User wallet transaction ledger"
+    },
+    "/daily_bonuses/{bonusId}": {
+      "schema": { "$ref": "#/entities/DailyBonusRecord" },
+      "description": "Daily bonus claim history"
+    },
+    "/scratch_cards/{cardId}": {
+      "schema": { "$ref": "#/entities/ScratchCardRecord" },
+      "description": "Scratch card claims"
+    },
+    "/spin_history/{spinId}": {
+      "schema": { "$ref": "#/entities/SpinHistoryRecord" },
+      "description": "Lucky spin results"
+    },
+    "/quiz_questions/{questionId}": {
+      "schema": { "$ref": "#/entities/QuizQuestion" },
+      "description": "Bihar Board question bank"
+    },
+    "/quiz_attempts/{attemptId}": {
+      "schema": { "$ref": "#/entities/QuizAttempt" },
+      "description": "User quiz attempts"
+    },
+    "/quiz_scores/{userId}": {
+      "schema": { "$ref": "#/entities/QuizScoreSummary" },
+      "description": "Subject-wise quiz scoreboard per user"
+    },
+    "/ad_rewards/{rewardEventId}": {
+      "schema": { "$ref": "#/entities/AdRewardLog" },
+      "description": "Verified rewarded ad completion logs"
+    },
+    "/ad_free_passes/{passId}": {
+      "schema": { "$ref": "#/entities/AdFreePassRecord" },
+      "description": "24-hour Quiz Ad-Free Pass purchases"
+    },
+    "/rewards/{rewardId}": {
+      "schema": { "$ref": "#/entities/RewardCatalogItem" },
+      "description": "Admin-managed reward store catalog"
+    },
+    "/reward_submissions/{submissionId}": {
+      "schema": { "$ref": "#/entities/RewardSubmission" },
+      "description": "Store redemptions and monthly reward submissions"
+    },
+    "/announcements/{announcementId}": {
+      "schema": { "$ref": "#/entities/Announcement" },
+      "description": "Monthly reward events and winner announcements"
+    },
+    "/notifications/{notificationId}": {
+      "schema": { "$ref": "#/entities/AppNotification" },
+      "description": "User and broadcast notifications"
+    },
+    "/admin_users/{uid}": {
+      "schema": { "$ref": "#/entities/AdminUserRecord" },
+      "description": "Authorized admin roles"
+    },
+    "/leaderboard/{userId}": {
+      "schema": { "$ref": "#/entities/LeaderboardEntry" },
+      "description": "Public non-PII leaderboard entries"
+    },
+    "/app_config/{configId}": {
+      "schema": { "$ref": "#/entities/AppSettings" },
+      "description": "App-wide AdMob and reward parameters"
+    }
+  }
+}

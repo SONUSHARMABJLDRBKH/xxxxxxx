@@ -1,0 +1,8 @@
+{
+  "name": "StudyWin India",
+  "description": "Bihar Board educational quiz, rewards, lucky spin, scratch cards, and AdMob rewards platform",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
